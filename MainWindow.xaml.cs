@@ -26,70 +26,54 @@ namespace Dolgozatok
     }
     public partial class MainWindow : Window
     {
-        private readonly ObservableCollection<Dolgozat> dolgozatok = new ObservableCollection<Dolgozat>
-        {
-            new Dolgozat { Nev = "Kiss Péter",     Eletkor = 16, Pontszam = 87 },
-            new Dolgozat { Nev = "Nagy Anna",      Eletkor = 17, Pontszam = 92 },
-            new Dolgozat { Nev = "Szabó Tamás",    Eletkor = 16, Pontszam = 78 },
-            new Dolgozat { Nev = "Tóth Éva",       Eletkor = 18, Pontszam = 95 },
-            new Dolgozat { Nev = "Varga Bence",    Eletkor = 17, Pontszam = 81 },
-            new Dolgozat { Nev = "Horváth Zsolt",  Eletkor = 16, Pontszam = 65 },
-            new Dolgozat { Nev = "Molnár Réka",    Eletkor = 18, Pontszam = 89 },
-            new Dolgozat { Nev = "Lakatos Dániel", Eletkor = 17, Pontszam = 72 },
-        };
+        List<Dolgozat> lista = new List<Dolgozat>();
         public MainWindow()
         {
             InitializeComponent();
-            lvDolgozatok.ItemsSource = dolgozatok;
+            lista.Add(new Dolgozat { Nev = "Kiss Péter", Eletkor = 16, Pontszam = 87 });
+            lista.Add(new Dolgozat { Nev = "Nagy Anna", Eletkor = 17, Pontszam = 92 });
+            lista.Add(new Dolgozat { Nev = "Szabó Tamás", Eletkor = 16, Pontszam = 78 });
+            lista.Add(new Dolgozat { Nev = "Tóth Éva", Eletkor = 18, Pontszam = 95 });
+            lista.Add(new Dolgozat { Nev = "Varga Bence", Eletkor = 17, Pontszam = 81 });
+            lista.Add(new Dolgozat { Nev = "Horváth Zsolt", Eletkor = 16, Pontszam = 65 });
+            lista.Add(new Dolgozat { Nev = "Molnár Réka", Eletkor = 18, Pontszam = 89 });
+            lista.Add(new Dolgozat { Nev = "Lakatos Dániel", Eletkor = 17, Pontszam = 72 });
+            dgDolgozatok.ItemsSource = lista;
         }
         private void BtnHozzaadas_Click(object sender, RoutedEventArgs e)
         {
-            string nev = txtNev.Text.Trim();
-
-            if (string.IsNullOrEmpty(nev))
+            try
             {
-                MessageBox.Show("Add meg a nevet!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtNev.Focus();
-                return;
-            }
-            if (!int.TryParse(txtEletkor.Text, out int eletkor) || eletkor <= 0)
-            {
-                MessageBox.Show("Az életkor pozitív egész szám legyen!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtEletkor.Focus();
-                return;
-            }
-            if (!int.TryParse(txtPontszam.Text, out int pontszam) || pontszam < 0)
-            {
-                MessageBox.Show("A pontszám nem negatív egész szám legyen!", "Hiba", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtPontszam.Focus();
-                return;
-            }
+                Dolgozat uj = new Dolgozat();
+                uj.Nev = txtNev.Text;
+                uj.Eletkor = Convert.ToInt32(txtEletkor.Text);
+                uj.Pontszam = Convert.ToInt32(txtPontszam.Text);
 
-            dolgozatok.Add(new Dolgozat { Nev = nev, Eletkor = eletkor, Pontszam = pontszam });
+                lista.Add(uj);
 
-            txtNev.Clear();
-            txtEletkor.Clear();
-            txtPontszam.Clear();
-            txtNev.Focus();
+                dgDolgozatok.ItemsSource = null;
+                dgDolgozatok.ItemsSource = lista;
+
+                txtNev.Clear();
+                txtEletkor.Clear();
+                txtPontszam.Clear();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Hibás adat! Az életkor és a pontszám szám legyen.");
+            }
         }
 
         private void BtnMentes_Click(object sender, RoutedEventArgs e)
         {
-            var dlg = new SaveFileDialog
+            StreamWriter sw = new StreamWriter("dolgozatok.txt");
+            foreach (Dolgozat d in lista)
             {
-                Filter = "Szövegfájl (*.txt)|*.txt",
-                FileName = "dolgozatok.txt"
-            };
+                sw.WriteLine(d.Nev + ";" + d.Eletkor + ";" + d.Pontszam);
+            }
+            sw.Close();
 
-            if (dlg.ShowDialog() != true) return;
-
-            var sb = new StringBuilder();
-            sb.AppendLine("Nev;Eletkor;Pontszam");
-            foreach (var d in dolgozatok)
-                sb.AppendLine($"{d.Nev};{d.Eletkor};{d.Pontszam}");
-
-            File.WriteAllText(dlg.FileName, sb.ToString(), new UTF8Encoding(true));
-            MessageBox.Show("Sikeres mentés!", "Mentés", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Sikeres mentés!");
         }
     }
 }

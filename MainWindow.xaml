@@ -6,50 +6,43 @@
         xmlns:local="clr-namespace:Dolgozatok"
         mc:Ignorable="d"
         Title="Dolgozatok" Height="450" Width="800">
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
 
-        <ListView x:Name="lvDolgozatok" Grid.Row="0" Margin="0,0,0,25"
-                  ItemsSource="{Binding}">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Nev" Width="130"
-                                    DisplayMemberBinding="{Binding Nev}"/>
-                    <GridViewColumn Header="Eletkor" Width="70"
-                                    DisplayMemberBinding="{Binding Eletkor}"/>
-                    <GridViewColumn Header="Pontszam" Width="95"
-                                    DisplayMemberBinding="{Binding Pontszam}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <StackPanel Grid.Column="1" Orientation="Vertical" Margin="0,20,0,0">
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,20">
-            <TextBlock Text="Név:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <TextBox x:Name="txtNev" Width="235" Height="38"
-                     VerticalContentAlignment="Center"/>
-            <TextBlock Text="Életkor:" VerticalAlignment="Center" Margin="25,0,10,0"/>
-            <TextBox x:Name="txtEletkor" Width="78" Height="38"
-                     VerticalContentAlignment="Center"/>
-            <TextBlock Text="Pontszám:" VerticalAlignment="Center" Margin="25,0,10,0"/>
-            <TextBox x:Name="txtPontszam" Width="78" Height="38"
-                     VerticalContentAlignment="Center"/>
+            <DataGrid x:Name="dgDolgozatok" Height="285" AutoGenerateColumns="False"
+                      IsReadOnly="True" CanUserAddRows="False"
+                      HeadersVisibility="Column" GridLinesVisibility="All"
+                      HorizontalGridLinesBrush="Black" VerticalGridLinesBrush="Black">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Nev" Binding="{Binding Nev}" Width="110"/>
+                    <DataGridTextColumn Header="Eletkor" Binding="{Binding Eletkor}" Width="70"/>
+                    <DataGridTextColumn Header="Pontszam" Binding="{Binding Pontszam}" Width="90"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Orientation="Horizontal" Margin="0,25,0,0">
+                <Label Content="Név:" VerticalAlignment="Center"/>
+                <TextBox x:Name="txtNev" Width="235" Height="38" VerticalContentAlignment="Center"/>
+                <Label Content="Életkor:" VerticalAlignment="Center" Margin="25,0,0,0"/>
+                <TextBox x:Name="txtEletkor" Width="78" Height="38" VerticalContentAlignment="Center"/>
+                <Label Content="Pontszám:" VerticalAlignment="Center" Margin="25,0,0,0"/>
+                <TextBox x:Name="txtPontszam" Width="78" Height="38" VerticalContentAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <Button x:Name="btnHozzaadas" Content="Hozzáadás" Width="156" Height="46"
+                        Click="btnHozzaadas_Click"/>
+                <Button x:Name="btnMentes" Content="Mentés" Width="156" Height="46" Margin="15,0,0,0"
+                        Click="btnMentes_Click"/>
+            </StackPanel>
+
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
-            <Button x:Name="btnHozzaadas" Content="Hozzáadás" Width="156" Height="46"
-                    Click="BtnHozzaadas_Click"/>
-            <Button x:Name="btnMentes" Content="Mentés" Width="156" Height="46"
-                    Margin="15,0,0,0" Click="BtnMentes_Click"/>
-        </StackPanel>
     </Grid>
 </Window>
